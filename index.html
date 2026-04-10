@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainmoto Level-Up | After-School Program</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.webp">
+
+     <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- School Config -->
+    <script src="schools.js"></script>
+    
+    <!-- Google Fonts OLD-->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet"> -->
+        
+    <!-- Google Fonts (Optimized) -->
+    <!-- 1. Establish early connection to Google's servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 2. Load Fonts with 'swap' to prevent invisible text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+     
+    <!-- Brainmoto Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4e3f8a',
+                        accent: '#f5d527',
+                        lavender: '#f2efff',
+                        dark: '#333333',
+                        lightpurple: '#7d6fb2'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    maxWidth: {
+                        'site': '1300px',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* CRITICAL MOBILE FIXES */
+        html, body {
+            overflow-x: hidden; /* Cuts off side-scroll */
+            width: 100%;
+            position: relative;
+        }
+        
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+        .btn-shine:hover::after {
+            left: 150%;
+            transition: 0.7s ease-in-out;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark antialiased bg-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-site mx-auto px-3 sm:px-6 py-2 sm:py-3 flex justify-between items-center overflow-hidden">
+            
+            <!-- Left: Brainmoto Logo -->
+            <div class="flex-shrink-0 flex items-center">
+                <a href="#" class="block hover:opacity-90 transition-opacity">
+                    <img src="assets/images/logo.webp" alt="Brainmoto" class="h-7 sm:h-10 w-auto object-contain">
+                </a>
+            </div>
+            
+            <!-- Center: School Identity (Mobile Optimized) -->
+            <div id="school-badge" class="flex items-center bg-lavender/50 rounded-xl px-1 sm:px-3 py-1 border border-primary/5 min-w-0 mx-2">
+                
+                <!-- "Partner School" Label: Only on DESKTOP -->
+                <span class="hidden lg:block text-[10px] font-bold text-primary/60 uppercase tracking-widest border-r border-primary/10 pr-3 mr-1 whitespace-nowrap">Partner School</span>
+                
+                <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <!-- School Logo Container -->
+                    <div id="logo-container" class="hidden h-7 w-7 sm:h-10 sm:w-10 bg-white rounded-lg shadow-sm flex-shrink-0 flex items-center justify-center overflow-hidden">
+                        <img id="nav-school-logo" src="" alt="" class="w-full h-full object-contain">
+                    </div>
+
+                    <!-- School Name Text -->
+                    <span id="nav-school-name" class="hidden md:block font-bold text-primary text-xs sm:text-sm tracking-tight truncate max-w-[120px] lg:max-w-none">
+                        Loading...
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Right: CTA Button -->
+            <div class="flex-shrink-0">
+                <button onclick="startEnrollment()" class="btn-shine bg-accent text-primary font-bold px-3 py-2 sm:px-6 sm:py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all text-[11px] sm:text-base whitespace-nowrap">
+                    Enroll Now
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-28 pb-16 lg:pt-44 lg:pb-24 overflow-hidden bg-gradient-to-b from-lightpurple to-[#332c4d]">
+        
+        <!-- IMAGE BACKGROUND -->
+        <div class="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
+            <!-- <img src="assets/images/hero-brain-bg.webp" alt="Brainmoto Brain background" class="w-full max-w-lg md:max-w-3xl opacity-10 object-contain"> -->
+            <img src="assets/images/hero-brain-bg.webp" 
+                alt="Brainmoto Background" 
+                class="w-full max-w-lg md:max-w-3xl opacity-10 object-contain"
+                width="800" height="800" 
+                fetchpriority="high">
+        </div>
+
+        <!-- Decor Floating Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div class="absolute bg-accent/20 w-48 h-48 sm:w-72 sm:h-72 rounded-full -top-10 -left-10 blur-3xl opacity-60 animate-float"></div>
+            <div class="absolute bg-primary/10 w-64 h-64 sm:w-96 sm:h-96 rounded-full bottom-0 -right-20 blur-3xl opacity-60 animate-float" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="max-w-site mx-auto px-4 sm:px-6 relative z-10 text-center">
+            
+            <!-- BADGE -->
+            <div data-aos="fade-up" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white border border-white/20 shadow-lg mb-8 mx-auto max-w-full">
+                <span class="w-2 h-2 rounded-full bg-accent animate-pulse shrink-0"></span>
+                <span class="text-[10px] sm:text-sm tracking-wide uppercase whitespace-normal sm:whitespace-nowrap flex flex-wrap justify-center items-center gap-x-2 gap-y-0 leading-tight">
+                    <span class="text-primary font-black">Brainmoto Level-Up</span>
+                    <span class="text-gray-300 hidden sm:inline">|</span>
+                    <span class="text-gray-500 font-semibold">After-School Program</span>
+                </span>
+            </div>
+            
+            <!-- Headline -->
+            <h1 data-aos="fade-up" data-aos-delay="100" class="font-heading text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+                Building the Learning Skills <br class="hidden sm:block">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-400 relative">
+                    Today’s Classrooms Demand
+                    <svg class="absolute w-full h-2 sm:h-3 -bottom-1 left-0 text-accent opacity-80" viewBox="0 0 200 9" fill="none"><path d="M2 7C25 3 84 2 125 3C158 3 204 3 248 6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                </span>
+            </h1>
+
+            <!-- Sub-headline -->
+           
+               <p data-aos="fade-up" data-aos-delay="200" class="text-base sm:text-xl text-blue-50 mb-8 max-w-2xl mx-auto px-2" style="line-height: 2 !important;">
+                <span class="font-bold text-accent">Brainmoto Level-Up</span> is an After-School Program that helps children <br><span class="font-bold text-accent">Focus Better, Think Faster, Learn Easier</span>
+            </p>
+              <p data-aos="fade-up" data-aos-delay="200" class="text-base sm:text-xl text-blue-50 mb-6 mt-8 max-w-2xl mx-auto px-2" style="line-height: 2 !important;">
+               <span class="dynamic-school-text font-bold text-primary bg-yellow-100 px-1.5 rounded inline-block">your school</span> 
+            </p>
+           
+            <!-- Key Details -->
+            <div data-aos="fade-up" data-aos-delay="250" class="flex flex-wrap justify-center gap-4 mb-10">
+                <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2 rounded-xl text-white shadow-sm">
+                    <div class="text-xl">📅</div>
+                    <div class="text-left">
+                        <p class="text-[10px] text-white/60 uppercase tracking-wider font-bold">Duration</p>
+                        <p class="text-sm sm:text-base font-bold">2 Months (8 Weeks)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2 rounded-xl text-white shadow-sm">
+                    <div class="text-xl">⏱️</div>
+                    <div class="text-left">
+                        <p class="text-[10px] text-white/60 uppercase tracking-wider font-bold">Frequency</p>
+                        <p class="text-sm sm:text-base font-bold">2 Sessions / Week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="startEnrollment()" class="btn-shine px-8 py-4 bg-accent text-primary font-bold rounded-xl shadow-[0_0_20px_rgba(245,213,39,0.3)] hover:shadow-[0_0_30px_rgba(245,213,39,0.5)] hover:-translate-y-1 transition-all text-lg flex items-center justify-center gap-2">
+                    Enroll for Term 1
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </button>
+            </div>
+        </div>
+    </section>    
+
+    <!-- Social Proof Bar (ADDED overflow-hidden) -->
+    <section class="py-10 sm:py-12 bg-gray-50 border-y border-gray-100 overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-center text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                <div class="px-4 py-2" data-aos="fade-up" data-aos-delay="0">
+                    <div class="text-3xl sm:text-4xl mb-3">🌍</div>
+                    <div class="font-heading font-bold text-primary text-lg sm:text-xl">Global Standard</div>
+                    <p class="text-sm sm:text-base text-gray-500">Running in 6,000+ Schools Worldwide</p>
+                </div>
+                <div class="px-4 py-2" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-3xl sm:text-4xl mb-3">🇮🇳</div>
+                    <div class="font-heading font-bold text-primary text-lg sm:text-xl">India Proven</div>
+                    <p class="text-sm sm:text-base text-gray-500">Trusted in 22 Cities across India</p>
+                </div>
+                <div class="px-4 py-2" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-3xl sm:text-4xl mb-3">📜</div>
+                    <div class="font-heading font-bold text-primary text-lg sm:text-xl">NEP 2020 Aligned</div>
+                    <p class="text-sm sm:text-base text-gray-500">Meets New Education Policy Guidelines</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section (ADDED overflow-hidden) -->
+    <section class="py-16 sm:py-24 bg-white overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="text-center mb-12 sm:mb-16">
+                <span class="text-primary/80 font-bold tracking-widest uppercase text-xs bg-lavender px-3 py-1 rounded-full">The Hidden Reason</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold text-primary mt-4 mb-4 leading-tight">Why Bright Children<br>Sometimes Struggle</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">It's not about intelligence. Weak brain-body connections often show up as these common challenges</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Cards -->
+                <div data-aos="fade-up" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">✍️</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Messy Handwriting</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Struggling with grip or spacing usually indicates weak motor skills and posture control, not laziness</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">🎯</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Low Focus span</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">If a child cannot sit still, their brain is using all its energy just to keep the body upright, leaving zero energy for learning</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">📖</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Reading Fluency</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Skipping lines or losing place while reading is often a visual tracking issue (eye-motor skill), not a comprehension issue</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">📣</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Following Instructions</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Difficulty processing multi-step instructions ("Go to desk, open bag, take out book") is a sequencing and memory gap</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="400" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">🔢</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Math Anxiety</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Math requires spatial awareness and logical sequencing. If physical coordination is weak, these abstract concepts are harder to grasp</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="500" class="p-6 sm:p-8 rounded-2xl bg-lavender/30 hover:bg-lavender transition-all duration-300 border border-transparent hover:border-primary/10 hover:shadow-lg">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 shadow-sm text-primary">😓</div>
+                    <h3 class="font-heading text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3">Low Confidence</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Children who feel clumsy or uncoordinated often withdraw socially and hesitate to participate in group activities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- NEW SECTION: The Science (Learning Readiness) -->
+<section class="py-16 sm:py-24 bg-lavender relative overflow-hidden">
+  <div class="max-w-site mx-auto px-6">
+
+    <!-- Section Header -->
+    <div class="text-center mb-12 sm:mb-16">
+      <span class="text-primary font-bold tracking-widest uppercase text-xs bg-white/50 px-3 py-1 rounded-full">
+        The Science
+      </span>
+      <h2 class="font-heading text-3xl md:text-5xl font-bold text-primary mt-4 leading-tight">
+        The Missing Link:<br>Learning Readiness
+      </h2>
+      <p class="text-gray-600 mt-4 max-w-2xl mx-auto text-base sm:text-lg">
+        Motor development isn't a break from learning; it is the foundation of learning
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative max-w-2xl mx-auto">
+
+      <!-- Single Vertical Spine -->
+      <div class="absolute left-1/2 top-0 bottom-0 w-1 bg-primary/10 -translate-x-1/2 z-0"></div>
+
+      <div class="relative z-10 space-y-5 text-center">
+
+        <!-- STEP 1 -->
+        <div data-aos="fade-up">
+          <div class="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14
+                      bg-accent rounded-full flex items-center justify-center
+                      text-primary shadow-lg ring-4 ring-white">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+
+          <div class="inline-block bg-lavender px-4 pb-1">
+            <h3 class="font-heading text-xl sm:text-2xl font-bold text-primary">
+              1. Better Motor Skills
+            </h3>
+            <p class="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
+              We strengthen coordination, balance, and core stability
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div data-aos="fade-up">
+          <div class="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14
+                      bg-white border-2 border-primary rounded-full
+                      flex items-center justify-center text-primary shadow-lg">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </div>
+
+          <div class="inline-block bg-lavender px-4 pb-1">
+            <h3 class="font-heading text-xl sm:text-2xl font-bold text-primary">
+              2. Better Cognitive Functions
+            </h3>
+            <p class="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
+              Improved focus, memory, and processing speed
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 3 (Key Step) -->
+        <div data-aos="fade-up">
+          <div class="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14
+                      bg-accent rounded-full flex items-center justify-center
+                      text-primary shadow-lg ring-4 ring-accent/40">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+
+          <div class="inline-block bg-primary text-white px-6 py-4 rounded-xl shadow-xl">
+            <h3 class="font-heading text-xl sm:text-2xl font-bold">
+              3. Learning Readiness
+            </h3>
+            <p class="text-xs sm:text-sm text-blue-100 opacity-90">
+              Brain & Body are mature enough to learn
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div data-aos="fade-up">
+          <div class="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14
+                      bg-white border-2 border-primary rounded-full
+                      flex items-center justify-center text-primary shadow-lg">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </div>
+
+          <div class="inline-block bg-lavender px-4 pb-1">
+            <h3 class="font-heading text-2xl sm:text-3xl font-bold text-primary">
+              4. Better Academic Performance
+            </h3>
+            <p class="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
+              Better grades, neater handwriting, and ease of learning
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Research Quote -->
+      <div data-aos="zoom-in"
+           class="mt-14 sm:mt-16 bg-white border-l-4 border-accent
+                  p-6 sm:p-8 rounded-r-xl shadow-sm max-w-3xl mx-auto">
+        <p class="text-gray-600 italic mb-3 text-base sm:text-lg leading-relaxed">
+          "Research shows: Learning readiness contributes highly to educational achievement.
+          Absence of learning readiness spoils the teaching-learning process."
+        </p>
+        <p class="text-xs sm:text-sm font-bold text-primary uppercase tracking-wide">
+          — International Journal of Indian Psychology
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+    <!-- BRIDGE SECTION: Doctor Analogy -->
+    <section class="py-16 sm:py-24 bg-gradient-to-b from-primary via-purple-900 to-[#3a315e] text-white relative overflow-hidden">
+        
+        <!-- Decorative Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        
+        <div class="max-w-site mx-auto px-6 relative z-10">
+            
+            <!-- Main Analogy Statement -->
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+                    What We Do
+                </h2>
+            </div>
+
+            <!-- Comparison Cards -->
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+                
+                <!-- Doctor Card -->
+                <div class="bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-3xl p-8 sm:p-10" data-aos="fade-right">
+                    <div class="text-center mb-6">
+                        <div class="w-28 h-28 mx-auto bg-white/20 rounded-full flex items-center justify-center text-6xl mb-4 border-2 border-white/30">
+                            🩺
+                        </div>
+
+                    <p class="text-center mt-6 text-sm text-white/80 italic">
+                        Just like..
+                    </p>
+                        <h3 class="font-heading text-3xl sm:text-3xl font-extrabold mb-2">A Doctor Checks</h3>
+                    </div>
+                    <div class="space-y-4 text-center">
+                        <div class="flex items-center justify-center gap-3 bg-white/10 rounded-xl p-4 border border-white/20">
+                            <span class="text-3xl">❤️</span>
+                            <span class="font-extrabold text-lg">Blood Pressure</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-3 bg-white/10 rounded-xl p-4 border border-white/20">
+                            <span class="text-3xl">🫀</span>
+                            <span class="font-extrabold text-lg">Pulse Rate</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-center mt-6 text-sm text-white/80 italic">
+                        To ensure physical health
+                    </p>
+                    
+                </div>
+
+                <!-- Brainmoto Card -->
+                <div class="bg-accent text-primary rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-white/70" data-aos="fade-left">
+                    <div class="text-center mb-6">
+                        <div class="w-28 h-28 mx-auto bg-primary/20 rounded-full flex items-center justify-center text-7xl mb-4 border-2 border-primary/20">
+                            🧠
+                        </div>
+                        <h3 class="font-heading text-3xl sm:text-3xl font-extrabold mt-11 mb-2">Brainmoto Checks</h3>
+                    </div>
+                    <div class="space-y-4 text-center">
+                        <div class="flex items-center justify-center gap-3 bg-primary/10 rounded-xl p-4 border border-primary/20">
+                            <span class="text-3xl">🎯</span>
+                            <span class="font-heading font-extrabold text-xl sm:text-2xl">8 Core Skills</span>
+                        </div>
+                        <div class="text-lg sm:text-lg font-bold text-primary px-4">
+                            (Brain-Body Connections)
+                        </div>
+                    </div>
+                    <p class="text-center mt-6 text-sm font-semibold  italic">
+                        To ensure Learning Readiness
+                    </p>
+                </div>
+            </div>
+
+            <!-- Key Insight Box -->
+            <div class="max-w-3xl mx-auto bg-white/10 backdrop-blur-md border-2 border-accent rounded-2xl p-6 sm:p-8" data-aos="zoom-in" data-aos-delay="200">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl flex-shrink-0">💡</div>
+                    <div>
+                        <h4 class="font-heading text-xl sm:text-2xl font-bold mb-2 text-accent">The Key Idea</h4>
+                        <p class="text-white/90 text-lg sm:text-xl leading-relaxed">
+                            These <strong class="text-accent">8 Core Learning Skills</strong> called <strong class="text-accent">Brain-Body Connections</strong> are the foundation of how the brain and body work together. When they're strong, children <strong class="text-accent">Focus Better, Think Faster, Learn Easier</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+  
+    <!-- The Solution: 8 Vitals (ADDED overflow-hidden) -->
+    <section class="py-16 sm:py-24 bg-primary text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-full h-full opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        
+        <div class="max-w-site mx-auto px-6 relative z-10">
+            <div class="text-center mb-12 sm:mb-16">
+                <span class="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-accent font-bold tracking-widest uppercase text-xs mb-4">The Brainmoto Solution</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4 leading-normal">Learning happens when the brain<br>and body work together</h2>
+                <p class="text-blue-100 text-base sm:text-lg max-w-2xl mx-auto">These 8 Core Skills (Brain-Body Connections) build the foundation that makes learning easier</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Cards -->
+                 <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">👁️</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Attention & Self-Regulation</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Sustain attention and resist distractions</p>
+                </div>
+                 <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">🤸</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Coordination & Bilateral Integration</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Synchronized movement of body parts together</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">💡</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Thinking & Problem Solving</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Reasoning and analytical abilities</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">🧘</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Posture & Body Management</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Control the body in stationary and moving positions</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">🤹</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Object Control & Visual Tracking</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Controlling objects with hands, feet, or body</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">🧠</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Working Memory</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Store and recall information effectively</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">🏃</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Locomotor & Movement Fluency</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Moving the body from one point to another</p>
+                </div>
+                         
+              
+                <div class="bg-white rounded-2xl p-6 text-center shadow-xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg group-hover:scale-110 transition-transform">📋</div>
+                    <h4 class="font-heading font-bold text-primary text-lg mb-2 leading-tight">Planning & Organizing</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Sequential thinking and organization skills</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section (ADDED overflow-hidden) -->
+    <section class="py-16 sm:py-24 bg-white overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="text-center mb-12 sm:mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-xs bg-lavender px-3 py-1 rounded-full">Outcomes</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold text-primary mt-4 leading-tight">The Transformation You Will See</h2>
+                <p class="text-gray-600 mt-2 text-base sm:text-lg">Real-world results parents report after the Level-Up program</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+                <!-- Academic Wins -->
+                <div data-aos="fade-right" class="bg-lavender/30 p-6 sm:p-10 rounded-3xl">
+                    <h3 class="font-heading text-xl sm:text-2xl font-bold text-primary mb-6 sm:mb-8 flex items-center gap-3">
+                        <span class="text-3xl">📚</span> In The Classroom
+                    </h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">1</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Improved (Sustained) Attention</strong>
+                                <p class="text-sm sm:text-base text-gray-600">Stays focused for longer and needs fewer reminders to return to the task</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">2</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Listens and Follows Instructions</strong>
+                                <p class="text-sm sm:text-base text-gray-600">Understands directions the first time and completes steps in the right order with less repetition</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">3</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Increased Class Participation</strong>
+                                <p class="text-sm sm:text-base text-gray-600">More willing to raise their hand, answer questions, and take part in group activities</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Personal Wins -->
+                <div data-aos="fade-left" class="bg-yellow-50 p-6 sm:p-10 rounded-3xl">
+                    <h3 class="font-heading text-xl sm:text-2xl font-bold text-primary mb-6 sm:mb-8 flex items-center gap-3">
+                        <span class="text-3xl">🌟</span> In Daily Life
+                    </h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">1</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Higher Confidence</strong>
+                                <p class="text-sm sm:text-base text-gray-600">Physical competence leads to social confidence. They engage more in group activities</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">2</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Manage Emotions Better</strong>
+                                <p class="text-sm sm:text-base text-gray-600">Pauses and thinks before acting. Makes better decisions</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-primary text-base font-bold mt-0.5 flex-shrink-0">3</div>
+                            <div>
+                                <strong class="block text-gray-900 text-lg sm:text-xl mb-1">Faster Understanding</strong>
+                                <p class="text-sm sm:text-base text-gray-600">Processes instructions and concepts quickly</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Trust & Joy (Gallery + Testimonials) (ADDED overflow-hidden) -->
+    <section class="py-24 bg-lavender/50 overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Left Side: Simple Image Grid (The "Fun" Proof) -->
+                <!-- <div class="grid grid-cols-2 gap-4" data-aos="fade-right"> -->
+                    <!-- Replace these src with actual photos of your sessions -->
+                    <!-- <div class="space-y-4">
+                        <img src="assets/images/act-1.webp" alt="Children playing fine motor game using tweezers" class="rounded-2xl shadow-md w-full h-48 object-cover border-4 border-white" loading="lazy">
+                        <img src="assets/images/act-2.webp" alt="Child happily playing flip with lollypop and happy angle" class="rounded-2xl shadow-md w-full h-64 object-cover border-4 border-white" loading="lazy">
+                    </div>
+                    <div class="space-y-4 pt-8">
+                        <img src="assets/images/act-3.webp" alt="Children balancing a smiley ball on happy angle placed on a paddle" class="rounded-2xl shadow-md w-full h-64 object-cover border-4 border-white" loading="lazy">
+                        <img src="assets/images/act-4.webp" alt="Children playing balance walk game on a straight line" class="rounded-2xl shadow-md w-full h-48 object-cover border-4 border-white" loading="lazy">
+                    </div>
+                </div> -->
+
+               <div class="grid grid-cols-2 gap-4" data-aos="fade-right">
+                <div class="space-y-4">
+                    <video autoplay loop muted playsinline preload="metadata"
+                    class="rounded-2xl shadow-md w-full h-48 object-cover border-4 border-white">
+                    <source src="assets/videos/act-1.webm" type="video/webm">
+                    <source src="assets/videos/act-1.mp4" type="video/mp4">
+                    </video>
+
+                    <video autoplay loop muted playsinline preload="metadata"
+                    class="rounded-2xl shadow-md w-full h-64 object-cover border-4 border-white">
+                    <source src="assets/videos/act-2.webm" type="video/webm">
+                    <source src="assets/videos/act-2.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="space-y-4 pt-8">
+                    <video autoplay loop muted playsinline preload="metadata"
+                    class="rounded-2xl shadow-md w-full h-64 object-cover border-4 border-white">
+                    <source src="assets/videos/act-3.webm" type="video/webm">
+                    <source src="assets/videos/act-3.mp4" type="video/mp4">
+                    </video>
+
+                    <video autoplay loop muted playsinline preload="metadata"
+                    class="rounded-2xl shadow-md w-full h-48 object-cover border-4 border-white">
+                    <source src="assets/videos/act-4.webm" type="video/webm">
+                    <source src="assets/videos/act-4.mp4" type="video/mp4">
+                    </video>
+                </div>
+                </div>
+ 
+
+                <!-- Right Side: Testimonials (The "Trust" Proof) -->
+                <div data-aos="fade-left">
+                    <span class="text-primary font-bold tracking-widest uppercase text-xs bg-white px-3 py-1 rounded-full">Success Stories</span>
+                    <h2 class="font-heading text-3xl md:text-4xl font-bold text-primary mt-4 mb-8 leading-tight">Trusted by Parents Across India</h2>
+                    
+                    <div class="space-y-6">
+                      <!-- Testimonial 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-accent">
+                             <p class="text-gray-600 italic mb-4">"My son used to struggle with focus and balance. After 3 months in Level-Up, he's more confident and even doing better in class. I love the progress reports!"</p>
+                             <div class="flex items-center gap-3">
+                                  <img src="assets/images/priya_s.webp" alt="Priya S." class="w-10 h-10 rounded-full object-cover shadow-sm border border-gray-100">
+                                  <div>
+                                        <p class="text-sm font-bold text-primary">Priya S.</p>
+                                        <p class="text-[10px] text-gray-500 uppercase">Mother of 6-year-old, Pune</p>
+                                  </div>
+                             </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-accent">
+                            <p class="text-gray-600 italic mb-4">"This is the first time I've seen a physical program help with my daughter’s academic learning. She genuinely looks forward to it every week!"</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center font-bold text-primary">R</div>
+                                <div>
+                                    <p class="text-sm font-bold text-primary">Rakesh K.</p>
+                                    <p class="text-[10px] text-gray-500 uppercase">Father of 8-year-old, Bangalore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Journey (Perfectly Centered Axis) -->
+    <section class="py-20 sm:py-28 bg-gray-50 overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="text-center mb-20">
+                <span class="text-primary font-bold tracking-widest uppercase text-xs bg-white px-3 py-1 rounded-full border border-gray-200">The Roadmap</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold text-primary mt-4 leading-tight">Your Child's Level-Up Journey</h2>
+                <p class="text-gray-600 mt-2 text-base sm:text-lg">A structured path to improved learning</p>
+            </div>
+
+            <!-- MOBILE TIMELINE (Vertical - Thicker Spine) -->
+            <div class="md:hidden relative pl-6 border-l-8 border-gray-200 space-y-10">
+                
+                <!-- Item 1 -->
+                <div data-aos="fade-left" class="relative pl-8">
+                    <!-- Icon -->
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    </div>
+                    <h4 class="font-extrabold text-primary text-xl leading-tight">Starts With: Registration</h4>
+                    <p class="text-sm text-gray-600 mt-1">Secure your spot & get batch allocation</p>
+                </div>
+
+                <!-- Item 2 -->
+                <div data-aos="fade-left" data-aos-delay="50" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">Twice-Weekly Sessions</h4>
+                    <p class="text-sm text-gray-600 mt-1">60-minute fun neuro-motor sessions after school</p>
+                </div>
+
+                <!-- Item 3 -->
+                <div data-aos="fade-left" data-aos-delay="100" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">Lesson Summary</h4>
+                    <p class="text-sm text-gray-600 mt-1">Video highlights & updates shared after every session</p>
+                </div>
+
+                <!-- Item 4 -->
+                <div data-aos="fade-left" data-aos-delay="150" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">Brainmoto Buddy Call</h4>
+                    <p class="text-sm text-gray-600 mt-1">Monthly touchpoint to discuss your child's progress</p>
+                </div>
+
+                <!-- Item 5 -->
+                <div data-aos="fade-left" data-aos-delay="200" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">Monthly Skill Checks</h4>
+                    <p class="text-sm text-gray-600 mt-1">Fun challenges to track motor milestones</p>
+                </div>
+
+                <!-- Item 6 -->
+                <div data-aos="fade-left" data-aos-delay="250" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-accent text-primary rounded-full flex items-center justify-center border-4 border-gray-50 shadow-md z-10">
+                        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">End of Term 1</h4>
+                    <p class="text-sm text-gray-600 mt-1">Completion of first 3-month module</p>
+                </div>
+
+                <!-- Item 7 -->
+                <div data-aos="fade-left" data-aos-delay="300" class="relative pl-8 opacity-75">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center border-4 border-gray-50 shadow-inner z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-gray-700 text-xl leading-tight">Term 2 Follows</h4>
+                    <p class="text-sm text-gray-600 mt-1">New challenges & continued growth</p>
+                </div>
+
+                <!-- Item 8 -->
+                <div data-aos="fade-left" data-aos-delay="350" class="relative pl-8">
+                    <div class="absolute -left-[34px] top-0 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-lg border-4 border-accent z-10">
+                        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-primary text-xl leading-tight">Graduation</h4>
+                    <p class="text-sm text-gray-600 mt-1">Final Assessment & Certification Day</p>
+                </div>
+            </div>
+
+            <!-- DESKTOP TIMELINE (The Perfect Grid - MD+) -->
+            <div class="hidden md:grid grid-cols-8 relative h-96">
+                
+                <!-- The Road (Centered Spine) -->
+                <div class="absolute top-1/2 left-0 w-full h-4 bg-gray-200 -translate-y-1/2 rounded-full z-0 shadow-inner"></div>
+
+                <!-- 1. Registration (TOP) -->
+                <div class="relative h-full">
+                    <div class="absolute bottom-1/2 w-full flex flex-col items-center justify-end pb-10 group" data-aos="fade-down">
+                        <div class="text-center w-[160%]">
+                            <!-- Added font-heading -->
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Registration</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Secure your spot</p>
+                        </div>
+                        <!-- Stem -->
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                    </div>
+                    <!-- Icon -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 2. Weekly Sessions (BOTTOM) -->
+                <div class="relative h-full">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="absolute top-1/2 w-full flex flex-col items-center justify-start pt-10 group" data-aos="fade-up">
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Weekly Sessions</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Fun neuro-motor games</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Lesson Summary (TOP) -->
+                <div class="relative h-full">
+                    <div class="absolute bottom-1/2 w-full flex flex-col items-center justify-end pb-10 group" data-aos="fade-down">
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Lesson Summary</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Video highlights</p>
+                        </div>
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 4. Buddy Call (BOTTOM) -->
+                <div class="relative h-full">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-11 h-11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    </div>
+                    <div class="absolute top-1/2 w-full flex flex-col items-center justify-start pt-10 group" data-aos="fade-up">
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Buddy Call</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Monthly progress chat</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Skill Checks (TOP) -->
+                <div class="relative h-full">
+                    <div class="absolute bottom-1/2 w-full flex flex-col items-center justify-end pb-10 group" data-aos="fade-down">
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Skill Checks</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Monthly challenges</p>
+                        </div>
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 6. End of Term 1 (BOTTOM - MILESTONE) -->
+                <div class="relative h-full">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-accent text-primary rounded-full flex items-center justify-center border-4 border-white shadow-2xl z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="absolute top-1/2 w-full flex flex-col items-center justify-start pt-10 group" data-aos="fade-up">
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">End of Term 1</h4>
+                            <p class="text-xs text-gray-500 leading-tight">First module complete</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Term 2 Follows (TOP - FADED) -->
+                <div class="relative h-full opacity-70">
+                    <div class="absolute bottom-1/2 w-full flex flex-col items-center justify-end pb-10 group" data-aos="fade-down">
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-gray-600 text-xl leading-tight mb-1">Term 2 Follows</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Continued growth</p>
+                        </div>
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gray-200 text-gray-500 border-4 border-white rounded-full flex items-center justify-center shadow-inner z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 8. Graduation (BOTTOM - ULTIMATE GOAL) -->
+                <div class="relative h-full">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl border-4 border-accent z-20">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+                    </div>
+                    <div class="absolute top-1/2 w-full flex flex-col items-center justify-start pt-10 group" data-aos="fade-up">
+                        <div class="h-10 w-0.5 bg-gray-300 mt-2 mb-2"></div>
+                        <div class="text-center w-[160%]">
+                            <h4 class="font-heading font-extrabold text-primary text-xl leading-tight mb-1">Graduation</h4>
+                            <p class="text-xs text-gray-500 leading-tight">Certification Day</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+          
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Details & Pricing (ADDED overflow-hidden) -->
+    <section class="py-16 sm:py-24 bg-lavender/30 overflow-hidden">
+        <div class="max-w-site mx-auto px-6">
+            <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
+                
+                <div class="p-8 md:p-12 md:w-2/3">
+                    <h3 class="font-heading text-2xl sm:text-3xl font-bold text-primary mb-8">Level-Up Program Details</h3>
+                    <div class="grid sm:grid-cols-2 gap-y-8 gap-x-6">
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Duration</strong><span class="text-gray-600 text-base">2 Months (8 Weeks)</span></div></div>
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Frequency</strong><span class="text-gray-600 text-base">2 Sessions per week (60 mins)</span></div></div>
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Location</strong><span class="text-gray-600 text-base">On-campus (Safe & Convenient)</span></div></div>
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Equipment</strong><span class="text-gray-600 text-base">All provided (Just bring shoes!)</span></div></div>
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Outcome</strong><span class="text-gray-600 text-base">Level-Up Certificate</span></div></div>
+                        <div class="flex gap-4"><div class="w-6 h-6 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center text-green-600 mt-0.5">✓</div><div><strong class="text-gray-900 block text-lg">Reporting</strong><span class="text-gray-600 text-base">Baseline & Final Assessment Reports</span></div></div>
+                    </div>
+                </div>
+
+                <div class="bg-primary p-8 md:p-12 md:w-1/3 text-white flex flex-col justify-center items-center text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary to-purple-900"></div>
+                    <div class="relative z-10 w-full">
+                        <p class="text-white/80 text-sm uppercase tracking-wide mb-2">Term 1 Fees</p>
+                        <h2 id="dynamic-price" class="font-heading text-4xl sm:text-5xl font-bold mb-1">Loading...</h2>
+                        <p class="text-sm text-white/60 mb-8">(Inclusive of GST)</p>
+                        
+                        <div id="batch-display" class="mb-8 p-4 bg-white/10 rounded-lg text-sm border border-white/10">
+                            Loading Schedule...
+                        </div>
+
+                        <button onclick="startEnrollment()" class="btn-shine w-full py-4 bg-accent text-primary font-bold rounded-xl shadow-lg hover:bg-yellow-300 transition-colors transform hover:-translate-y-1 text-lg">
+                            Enroll Now
+                        </button>
+                        <p class="text-xs mt-4 text-white/60">Secure payment via Razorpay</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 sm:py-24 bg-white overflow-hidden">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-primary font-bold tracking-widest uppercase text-xs bg-lavender px-3 py-1 rounded-full">Peace of Mind</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold text-primary mt-4">Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="space-y-4">
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        Is this a sports class?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        No. While we use movement too, the scientifically developed tools and activities are designed to strengthen "the 8 core skills" (Brain-Body Connections) that directly improve learning.
+                    </div>
+                </div>
+
+                 <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        Who conducts the sessions?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="hidden px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        Sessions are conducted by trained educators who are specifically certified in the Brainmoto Level-Up methodology. This ensures your child learns from qualified professionals in a safe environment.
+                    </div>
+                </div>
+               
+                 <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        Is the program different for younger and older kids?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="hidden px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        Yes. While the Learning Skills are universal, the complexity adapts to the age. Example: A nursery student focuses on fundamental movement patterns and sensory integration, while a grade 5 student faces complex strategy and dual-task challenges.
+                    </div>
+                </div>
+
+                  <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        What is the batch size?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="hidden px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        We maintain small groups (approx. 12-15 students) to ensure every child gets individual attention, correct guidance, and personalized feedback during the sessions.
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        What if my child misses a session?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="hidden px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        The program follows a group journey, and we do not offer make-up classes. If a session is missed, we share a session summary and a simple 5-minute home drill so your child stays on track.
+                    </div>
+                </div>
+                     
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center bg-gray-50 hover:bg-gray-100 font-bold text-primary text-base sm:text-lg focus:outline-none transition-colors" onclick="toggleFAQ(this)">
+                        When will I see results?
+                        <span class="text-xl sm:text-2xl text-accent font-bold">+</span>
+                    </button>
+                    <div class="hidden px-6 py-5 bg-white text-gray-600 text-sm sm:text-base leading-relaxed border-t border-gray-100">
+                        We conduct assessments every month to track progress. Most parents start noticing improvements in confidence, posture, and attention span within the first 6 weeks of consistent attendance.
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8 border-t border-gray-800">
+        <div class="max-w-site mx-auto px-6 flex flex-col md:flex-row justify-between items-end gap-6">
+            <div class="text-center md:text-left w-full md:w-auto">
+                <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <img src="assets/images/logo-white.webp" alt="Brainmoto" class="h-10 w-auto">
+                </div>
+                <p class="text-gray-400 text-sm font-medium">Building Learning Readiness in Every Child</p>
+            </div>
+            <div class="text-center md:text-right w-full md:w-auto">
+                <p class="text-xs text-gray-400">&copy; 2026 Brainmoto. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        function toggleFAQ(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('span');
+            const isOpening = content.classList.contains('hidden');
+
+            const container = btn.closest('.space-y-4');
+            
+            container.querySelectorAll('.border > div:last-child').forEach(div => {
+                div.classList.add('hidden');
+            });
+            
+            container.querySelectorAll('button > span').forEach(span => {
+                span.textContent = '+';
+            });
+
+            if (isOpening) {
+                content.classList.remove('hidden');
+                icon.textContent = '-';
+            }
+        }
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const schoolId = urlParams.get('school') || 'default';
+        const schoolData = schoolsConfig[schoolId] || schoolsConfig['default'];
+
+      document.addEventListener('DOMContentLoaded', () => {
+            
+            document.querySelectorAll('.dynamic-school-text').forEach(el => {
+                el.textContent = schoolData.name;
+            });
+            
+            const navName = document.getElementById('nav-school-name');
+            if (navName) {
+                navName.textContent = schoolData.name;
+            }
+            
+            const priceEl = document.getElementById('dynamic-price');
+            if (priceEl) {
+                priceEl.textContent = "₹" + schoolData.fee.toLocaleString('en-IN');
+            }
+
+            const batchEl = document.getElementById('batch-display');
+            if (batchEl) {
+                batchEl.textContent = schoolData.batches;
+            }
+
+            const logoImg = document.getElementById('nav-school-logo');
+            const logoContainer = document.getElementById('logo-container');
+            
+            if(logoImg && logoContainer) {
+                if(schoolData.logo && schoolData.logo.trim() !== "") {
+                    logoImg.src = schoolData.logo;
+                    logoContainer.classList.remove('hidden');
+                    logoContainer.style.display = 'flex';
+                } else {
+                    logoContainer.classList.add('hidden');
+                    logoContainer.style.display = 'none';
+                }
+            }
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+            
+        function startEnrollment() {
+            var options = {
+                "key": "rzp_test_Ry7LWYHgnI1WCZ", 
+                "amount": schoolData.fee * 100,
+                "currency": "INR",
+                "name": "Brainmoto Level-Up",
+                "description": "Term 1 Enrollment for " + schoolData.name,
+                "image": "https://brainmoto.in/assets/images/logo-icon.png",
+                "handler": function (response){
+                    window.location.href = `register.html?payment_id=${response.razorpay_payment_id}&school=${schoolId}&amount=${schoolData.fee}`;
+                },
+                "prefill": { "contact": "", "email": "" },
+                "theme": { "color": "#4e3f8a" }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+    </script>
+</body>
+</html>
