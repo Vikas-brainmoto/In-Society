@@ -5,11 +5,11 @@ const schoolsConfig = {
                 batches: "Batches assigned after registration",
                 logo: "" 
             },
-            'bm_oea_pn1iu': { 
-                name: "Octominds Preschool Ambazari",
-                fee: 5100,
-                batches: "Mon & Thu: 3:00 PM - 4:00 PM",
-                logo: "assets/images/Octominds_logo.webp"
+            'bm_isp_pn1ab': { 
+                name: "VTP HiLife",
+                fee: 2500,
+                batches: "Batches assigned after registration",
+                logo: "assets/images/vtphilife.webp"
             },
              'bm_oefc_pn2kh': { 
                 name: "Octominds Preschool Friends Colony",
