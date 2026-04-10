@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Enrolled! | Brainmoto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#4e3f8a', accent: '#f5d527', lavender: '#f2efff' } } } }
+    </script>
+</head>
+<body class="bg-lavender h-screen flex items-center justify-center overflow-hidden">
+
+    <div class="text-center px-6 relative z-10 max-w-lg">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl border-b-4 border-accent">
+            <div class="text-6xl mb-6 animate-bounce">🎉</div>
+            <h1 class="font-[Poppins] text-3xl font-bold text-primary mb-2">Welcome to Brainmoto Level-Up!</h1>
+            <p class="text-xl text-gray-600 font-medium mb-6">Your registration is complete.</p>
+            
+            <div class="bg-blue-50 p-6 rounded-xl text-left border border-blue-100">
+                <h3 class="font-bold text-primary mb-2 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-accent"></span> What happens next?
+                </h3>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    Our team is reviewing your details. We will add you to the <strong>exclusive Society Batch WhatsApp Group</strong> within 24 hours.
+                </p>
+            </div>
+
+            <a href="https://wa.me/919822004143" class="mt-8 block w-full py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-colors">
+                Need help? Chat on WhatsApp
+            </a>
+        </div>
+        
+        <p class="mt-8 text-gray-500 text-sm">You can close this window now.</p>
+    </div>
+
+    <script>
+        // Trigger Confetti
+        var duration = 3 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        var interval = setInterval(function() {
+          var timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          var particleCount = 50 * (timeLeft / duration);
+          confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+          confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+    </script>
+</body>
+</html>
