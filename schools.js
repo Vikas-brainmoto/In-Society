@@ -21,7 +21,7 @@ const schoolsConfig = {
                 logo: "assets/images/Octominds_logo.webp"
             },
             'bm_sssss_sk1ps': { 
-                name: "Tria Society Payment",
+                name: "Trial Society Payment",
                 fee: 10,
                 batches: "Batches assigned after registration",
                 logo: "https://via.placeholder.com/150x50?text=Trial_Payment"
