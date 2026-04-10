@@ -9,7 +9,7 @@ const schoolsConfig = {
                 name: "VTP HiLife",
                 fee: 2500,
                 batches: "Batches assigned after registration",
-                logo: "assets/images/vtphilife.webp"
+                logo: "assets/images/vtphilife1.webp"
             },
              'bm_oefc_pn2kh': { 
                 name: "Octominds Preschool Friends Colony",
