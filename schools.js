@@ -24,6 +24,6 @@ const schoolsConfig = {
                 name: "Trial Society Payment",
                 fee: 10,
                 batches: "Batches assigned after registration",
-                logo: "https://via.placeholder.com/150x50?text=Trial_Payment"
+                logo: ""
             }
         };
