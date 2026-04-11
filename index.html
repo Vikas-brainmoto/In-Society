@@ -1466,8 +1466,8 @@
                 "key": "rzp_live_SbghNRNDmULyrp", 
                 "amount": societyData.fee * 100,
                 "currency": "INR",
-                "name": "Brainmoto Level-Up",
-                "description": "Term 1 Enrollment for " + societyData.name,
+                "name": "Brainmoto",
+                "description": "Enrollment for " + societyData.name,
                 "image": "https://brainmoto.in/assets/images/logo-icon.png",
                 "handler": function (response){
                     window.location.href = `register.html?payment_id=${encodeURIComponent(response.razorpay_payment_id)}&society=${encodeURIComponent(societyId)}&amount=${encodeURIComponent(societyData.fee)}`;
